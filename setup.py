@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from . import chan
+import chan
 from setuptools import setup, find_packages
 
 __doc__ =  open('README.md').read()
