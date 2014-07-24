@@ -14,7 +14,7 @@ def render(content, **context):
     return template.render(**context)
 
 
-def render_overwrite(filename, **context):
+def render_file(filename, **context):
     with open(filename, 'r') as fp:
         content = fp.read()
 
@@ -28,7 +28,7 @@ def render_folder(dst, **context):
     for root, dirnames, filenames in os.walk(dst):
         for filename in filenames:
             filename = os.path.join(root, filename)
-            render_overwrite(filename, **context)
+            render_file(filename, **context)
 
 
 def callback(*args, **kwargs):
@@ -49,6 +49,18 @@ def make_project(path, name):
     render_folder(project_path, **context)
 
     pkg.extract_file('chan', 'core/templates/uwsgi_handler.py',  project_path, callback=callback)
+    render_file(os.path.join(project_path, 'uwsgi_handler.py'), **context)
+
+
+def app_append(path, project, app):
+    from_code = 'from %(project)s.apps.%(app)s import mod_%(app)s\n' % {'project': project, 'app': app}
+    register_code = "app.register_blueprint(mod_%(app)s, '%(app)s')\n" % {'app': app}
+
+    filename = os.path.join(path, project, '__init__.py')
+
+    with open(filename, 'w') as fp:
+        fp.write(from_code)
+        fp.write(register_code)
 
 
 
@@ -65,4 +77,6 @@ def make_app(path, project, name):
 
     context = {'project': project, 'app': name}
     render_folder(app_path, **context)
+
+    app_append(path, project, name)
 
