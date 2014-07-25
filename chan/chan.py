@@ -3,7 +3,7 @@
 
 import click
 import os
-from core import ExistError, ProjectPathError
+from core import ExistError, NotExistError
 from utils.cmd import make_project, make_app
 
 
@@ -31,13 +31,13 @@ def startproject(name):
 
 @chan.command()
 @click.argument('name')
-def startapp():
+def startapp(name):
     project = os.path.dirname(PWD_PATH)
     try:
         make_app(PWD_PATH, project, name)
     except ExistError:
         click.echo('app name %s has already exist' % name)
-    except ProjectPathError:
+    except NotExistError:
         click.echo('startapp should occur project path')
 
 

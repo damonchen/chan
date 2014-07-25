@@ -2,5 +2,5 @@
 # -*- coding: utf-8 -*-
 
 class ExistError(StandardError): pass
+class NotExistError(StandardError): pass
 
-class ProjectPathError(StandardError): pass

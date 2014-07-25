@@ -3,7 +3,7 @@
 
 from flask import Blueprint
 
-mod_{{app}} = Blueprint("{{app}}")
+mod_{{app}} = Blueprint("{{app}}", __name__)
 
 
-import views
+from {{project}}.apps.{{app}} import views

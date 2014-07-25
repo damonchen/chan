@@ -3,14 +3,17 @@
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from {{project}}.env import (STATIC_PATH, TEMPLATE_PATH)
 
+print 'template path', TEMPLATE_PATH
 
-app = Flask('apps')
-app.config.from_object('apps.config')
+app = Flask('apps', static_folder=STATIC_PATH, template_folder=TEMPLATE_PATH)
+app.config.from_object('{{project}}.config')
 
 db = SQLAlchemy(app)
 
 
-from apps.apps.index import mod_index
+from {{project}}.apps.home import mod_home
 
-app.register_blueprint(mod_index)
+app.register_blueprint(mod_home)
+

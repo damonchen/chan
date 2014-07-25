@@ -1,7 +1,4 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-import os
-
-PATH = os.path.dirname(os.path.abspath(__file__))
+from {{project}}.env import (PROJECT_PATH, WORK_PATH, STATIC_PATH, TEMPLATE_PATH)

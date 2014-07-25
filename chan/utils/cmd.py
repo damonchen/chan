@@ -6,7 +6,7 @@ import os
 import shutil
 from jinja2 import Template
 from chan.utils import pkg
-from chan.core import ExistError
+from chan.core import ExistError, NotExistError
 
 
 def render(content, **context):
@@ -43,7 +43,11 @@ def make_project(path, name):
     if os.path.exists(project_path):
         raise ExistError(name)
 
-    pkg.extract_folder('chan', 'core/templates/project',  project_path, callback=callback)
+    os.makedirs(project_path)
+
+    src_path = os.path.join(project_path, name)
+
+    pkg.extract_folder('chan', 'core/templates/project',  src_path, callback=callback)
 
     context = {'project': name}
     render_folder(project_path, **context)
@@ -63,11 +67,14 @@ def app_append(path, project, app):
         fp.write(register_code)
 
 
-
 def make_app(path, project, name):
-    apps_path = os.path.join(path,  'apps')
+    src_path = os.path.join(path, project)
+    if not os.path.exists(src_path):
+        raise NotExistError(project)
+
+    apps_path = os.path.join(src_path,  'apps')
     if not os.path.exists(apps_path):
-        raise ProjectPathError(name)
+        raise NotExistError(name)
 
     app_path = os.path.join(apps_path, name)
     if os.path.exists(app_path):
