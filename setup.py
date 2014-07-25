@@ -3,7 +3,8 @@
 
 
 import chan
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from chan.utils.setup import setup
 
 __doc__ =  open('README.md').read()
 
@@ -31,9 +32,7 @@ setup(name='chan',
     url=chan.__url__,
     license=chan.__license__,
     include_package_data=True,
-    packages = find_packages(),
-    package_dir={'chan': 'chan'},
-    package_data={'chan':  ['*.html', "*.txt"]},
+    packages = ['chan'],
     install_requires = ['click', 'jinja2'],
     zip_safe=False,
     entry_points = {

@@ -32,7 +32,7 @@ def startproject(name):
 @chan.command()
 @click.argument('name')
 def startapp(name):
-    project = os.path.dirname(PWD_PATH)
+    project = os.path.basename(PWD_PATH)
     try:
         make_app(PWD_PATH, project, name)
     except ExistError:

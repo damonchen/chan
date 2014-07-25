@@ -28,6 +28,10 @@ def render_folder(dst, **context):
     for root, dirnames, filenames in os.walk(dst):
         for filename in filenames:
             filename = os.path.join(root, filename)
+            name, ext = os.path.splitext(filename)
+            if ext in ('.html', '.htm'):
+                continue
+
             render_file(filename, **context)
 
 
@@ -50,7 +54,7 @@ def make_project(path, name):
     pkg.extract_folder('chan', 'core/templates/project',  src_path, callback=callback)
 
     context = {'project': name}
-    render_folder(project_path, **context)
+    render_folder(src_path, **context)
 
     pkg.extract_file('chan', 'core/templates/uwsgi_handler.py',  project_path, callback=callback)
     render_file(os.path.join(project_path, 'uwsgi_handler.py'), **context)
@@ -58,13 +62,14 @@ def make_project(path, name):
 
 def app_append(path, project, app):
     from_code = 'from %(project)s.apps.%(app)s import mod_%(app)s\n' % {'project': project, 'app': app}
-    register_code = "app.register_blueprint(mod_%(app)s, '%(app)s')\n" % {'app': app}
+    register_code = "app.register_blueprint(mod_%(app)s, url_prefix='/%(app)s')\n" % {'app': app}
 
     filename = os.path.join(path, project, '__init__.py')
 
-    with open(filename, 'w') as fp:
+    with open(filename, 'a') as fp:
         fp.write(from_code)
         fp.write(register_code)
+        fp.write('\n')
 
 
 def make_app(path, project, name):
@@ -86,4 +91,8 @@ def make_app(path, project, name):
     render_folder(app_path, **context)
 
     app_append(path, project, name)
+
+    # create templates
+    template_path = os.path.join(src_path, 'templates', name)
+    pkg.extract_folder('chan', 'core/templates/project/templates/home', template_path, callback=callback)
 
