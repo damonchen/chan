@@ -59,6 +59,8 @@ def make_project(path, name):
     pkg.extract_file('chan', 'core/templates/uwsgi_handler.py',  project_path, callback=callback)
     render_file(os.path.join(project_path, 'uwsgi_handler.py'), **context)
 
+    pkg.extract_file('chan', 'core/templates/requirements.txt',  project_path, callback=callback)
+
 
 def app_append(path, project, app):
     from_code = 'from %(project)s.apps.%(app)s import mod_%(app)s\n' % {'project': project, 'app': app}
