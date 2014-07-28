@@ -11,9 +11,9 @@ def templated(template=None):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            tepmlate_name = template
-            if tepmlate_name is None:
-                tepmlate_name = request.endpoint.replace('.', '/') + '.html'
+            template_name = template
+            if template_name is None:
+                template_name = request.endpoint.replace('.', '/') + '.html'
 
             start = time.time()
             ctx = f(*args, **kwargs)
@@ -25,7 +25,7 @@ def templated(template=None):
             render_time = int((end - start) * 1000)
             ctx['render_time'] = render_time
 
-            return render_template(tepmlate_name, **ctx)
+            return render_template(template_name, **ctx)
 
         return wrapper
     return decorator
